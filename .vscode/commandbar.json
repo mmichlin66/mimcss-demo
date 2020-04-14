@@ -1,0 +1,24 @@
+{
+    "skipTerminateQuickPick": true,
+    "skipSwitchToOutput": false,
+    "skipErrorMessage": true,
+	"commands":
+	[
+        {
+            "text": "mimcss-demo Dev",
+            "color": "white",
+            "commandType": "exec",
+            "command": "buildDev.bat",
+            "alignment": "left",
+            "priority": 1
+        },
+        {
+            "text": "mimcss-demo Prod",
+            "color": "yellow",
+            "commandType": "exec",
+            "command": "buildProd.bat",
+            "alignment": "left",
+            "priority": 1
+        }
+    ]
+}
