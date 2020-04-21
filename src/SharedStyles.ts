@@ -1,44 +1,59 @@
-﻿import {$abstract, $tag, $class, $id, $style, $keyframes, $var, $supports, $media,
-	$import, $fontface, $namespace, $page, $use, $activate, $deactivate, $selector, sh, Colors, Len,
-	IStylesheet, $enableOptimizedStyleNames, WebNamespaces, NestedGroup
-} from "mimcss"
+﻿import * as css from "mimcss"
 
 
 
-class SharedStyles
+class SharedStyles extends css.StyleDefinition
 {
 	init = [
-		$style( "*", {
+		css.$style( "*", {
 			fontFamily: "Verdana, Geneva, Tahoma, sans-serif",
 			boxSizing: "border-box",
 			fontSize: 12,
 			position: "relative",
 		}),
 
-		$tag( "html", { height: "100%" }),
-		$tag( "body", { height: "100%", margin: 0 }),
+		css.$tag( "html", { height: "100%" }),
+		css.$tag( "body", { height: "100%", margin: 0 }),
 	]
 
-	h = $abstract({ fontWeight: "bold", marginTop: 0.75, marginBottom: 0.5 })
+	h = css.$abstract({ fontWeight: "bold", marginTop: 0.75, marginBottom: 0.5 })
 	headers = [
-		$tag( "h1", { "+": this.h, fontSize: 24 }),
-		$tag( "h2", { "+": this.h, fontSize: 20 }),
-		$tag( "h3", { "+": this.h, fontSize: 18 }),
-		$tag( "h4", { "+": this.h, fontSize: 16 }),
-		$tag( "h5", { "+": this.h, fontSize: 14 }),
-		$tag( "h6", { "+": this.h, fontSize: 12 }),
+		css.$tag( "h1", { "+": this.h, fontSize: 24 }),
+		css.$tag( "h2", { "+": this.h, fontSize: 20 }),
+		css.$tag( "h3", { "+": this.h, fontSize: 18 }),
+		css.$tag( "h4", { "+": this.h, fontSize: 16 }),
+		css.$tag( "h5", { "+": this.h, fontSize: 14 }),
+		css.$tag( "h6", { "+": this.h, fontSize: 12 }),
 	]
 
-	vbox = $class({ display: "flex", flexDirection: "column" })
-	hbox = $class({ display: "flex", flexDirection: "row", alignItems: "center" })
+	defaultInlineGap = css.$var( "width", 8)
+	defaultBlockGap = css.$var( "width", 8)
 
-	elastic = $class();
+	spacing = css.$class();
+	elastic = css.$class();
+	vbox = css.$class({
+		display: "flex", flexDirection: "column",
+		"&": [
+			["& > *", { flex: [0, 0, "auto"] }],
+			[css.$selector( "&{0} > *", this.spacing), { marginBlockStart: this.defaultBlockGap, marginBlockEnd: this.defaultBlockGap }],
+			[css.$selector( "& > {0}", this.elastic), { flex: "1 1 0", overflow: "auto" }],
+		]
+	})
+	hbox = css.$class({
+		display: "flex", flexDirection: "row", alignItems: "center",
+		"&": [
+			["& > *", { flex: [0, 0, "auto"] }],
+			[css.$selector( "&{0} > *", this.spacing), { marginInlineStart: this.defaultInlineGap, marginInlineEnd: this.defaultInlineGap }],
+			[css.$selector( "& > {0}", this.elastic), { flex: "1 1 0", overflow: "auto" }],
+		]
+	})
+
 
 }
 
 
 
-export let sharedStyles = $activate( SharedStyles);
+export let sharedStyles = css.$activate( SharedStyles);
 
 
 
