@@ -2,7 +2,7 @@
 import * as css from "mimcss"
 
 
-/// #if UNIQUE_CSS_NAMES
+/// #if !DEBUG
 css.$enableOptimizedStyleNames( true, "m");
 /// #endif
 
