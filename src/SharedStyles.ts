@@ -12,18 +12,18 @@ class SharedStyles extends css.StyleDefinition
 			position: "relative",
 		}),
 
-		css.$tag( "html", { height: "100%" }),
-		css.$tag( "body", { height: "100%", margin: 0 }),
+		css.$style( "html", { height: "100%" }),
+		css.$style( "body", { height: "100%", margin: 0 }),
 	]
 
 	h = css.$abstract({ fontWeight: "bold", marginTop: 0.75, marginBottom: 0.5 })
 	headers = [
-		css.$tag( "h1", { "+": this.h, fontSize: 24 }),
-		css.$tag( "h2", { "+": this.h, fontSize: 20 }),
-		css.$tag( "h3", { "+": this.h, fontSize: 18 }),
-		css.$tag( "h4", { "+": this.h, fontSize: 16 }),
-		css.$tag( "h5", { "+": this.h, fontSize: 14 }),
-		css.$tag( "h6", { "+": this.h, fontSize: 12 }),
+		css.$style( "h1", { "+": this.h, fontSize: 24 }),
+		css.$style( "h2", { "+": this.h, fontSize: 20 }),
+		css.$style( "h3", { "+": this.h, fontSize: 18 }),
+		css.$style( "h4", { "+": this.h, fontSize: 16 }),
+		css.$style( "h5", { "+": this.h, fontSize: 14 }),
+		css.$style( "h6", { "+": this.h, fontSize: 12 }),
 	]
 
 	defaultInlineGap = css.$var( "width", 8)
