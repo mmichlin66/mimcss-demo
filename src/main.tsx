@@ -3,7 +3,7 @@ import * as css from "mimcss"
 
 
 /// #if !DEBUG
-css.$enableOptimizedStyleNames( true, "m");
+css.$enableShortNames( true, "m");
 /// #endif
 
 
