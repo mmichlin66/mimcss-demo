@@ -33,18 +33,22 @@ class SharedStyles extends css.StyleDefinition
 	elastic = css.$class();
 	vbox = css.$class({
 		display: "flex", flexDirection: "column",
+		"&>": [
+			["*", { flex: [0, 0, "auto"] }],
+			[this.elastic, { flex: "1 1 0", overflow: "auto" }],
+		],
 		"&": [
-			["& > *", { flex: [0, 0, "auto"] }],
-			[css.$selector( "&{0} > *", this.spacing), { marginBlockStart: this.defaultBlockGap, marginBlockEnd: this.defaultBlockGap }],
-			[css.$selector( "& > {0}", this.elastic), { flex: "1 1 0", overflow: "auto" }],
+			[css.selector`&${this.spacing} > *`, { marginBlockStart: this.defaultBlockGap, marginBlockEnd: this.defaultBlockGap }],
 		]
 	})
 	hbox = css.$class({
 		display: "flex", flexDirection: "row", alignItems: "center",
-		"&": [
+		"&>": [
 			["& > *", { flex: [0, 0, "auto"] }],
-			[css.$selector( "&{0} > *", this.spacing), { marginInlineStart: this.defaultInlineGap, marginInlineEnd: this.defaultInlineGap }],
-			[css.$selector( "& > {0}", this.elastic), { flex: "1 1 0", overflow: "auto" }],
+			[this.elastic, { flex: "1 1 0", overflow: "auto" }],
+		],
+		"&": [
+			[css.selector`&${this.spacing} > *`, { marginInlineStart: this.defaultInlineGap, marginInlineEnd: this.defaultInlineGap }],
 		]
 	})
 
