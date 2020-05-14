@@ -1,8 +1,4 @@
 {
-	"references": [
-		{ "path": "../mimcss" },
-		{ "path": "../mimbl" }
-	],
 	"compilerOptions": {
 		"composite": true,
 		"sourceMap": true,

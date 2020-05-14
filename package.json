@@ -1,6 +1,6 @@
 {
   "name": "mimcss-demo",
-  "version": "0.5.3",
+  "version": "0.5.5",
   "description": "Demonstration of Mimcss capabilities",
   "main": "lib/mimcss-demo.js",
   "scripts": {
@@ -23,12 +23,12 @@
   "devDependencies": {
     "ifdef-loader": "^2.1.5",
     "source-map-loader": "^0.2.4",
-    "typescript": "^3.8.3",
-    "webpack": "^4.42.1",
+    "typescript": "^3.9.2",
+    "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11"
   },
   "dependencies": {
     "mimbl": "^0.2.8",
-    "mimcss": "^0.5.3"
+    "mimcss": "^0.5.5"
   }
 }
