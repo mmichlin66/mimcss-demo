@@ -24,14 +24,14 @@ class MyStyles extends css.StyleDefinition
 	linearGradient = css.$class({
 		width: 200,
 		height: 200,
-		backgroundImage: css.repeatingLinearGradient( 15,
-						css.Colors.lightcyan, css.Colors.orange, [30], [css.Colors.lightcyan, 50])
+        backgroundImage: css.gradient.repeatingLinear.to(15)( css.Colors.lightcyan,
+            css.Colors.orange, [30], [css.Colors.lightcyan, 50])
 	})
 
 	radialGradient = css.$class({
 		width: 200,
 		height: 200,
-		backgroundImage: css.repeatingRadialGradient( "circle", "farthest-corner", [5.5,3.3],
+		backgroundImage: css.gradient.repeatingRadial.circle().extent("farthest-corner").at([5.5,3.3])(
 						css.Colors.lightcyan, css.Colors.orange, [30], [css.Colors.lightcyan, 50])
 	})
 
@@ -45,7 +45,7 @@ class MyStyles extends css.StyleDefinition
 
 
 
-let myStyles = css.$activate( MyStyles);
+let myStyles = css.activate( MyStyles);
 
 
 

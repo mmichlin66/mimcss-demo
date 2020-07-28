@@ -57,7 +57,7 @@ class SharedStyles extends css.StyleDefinition
 
 
 
-export let sharedStyles = css.$activate( SharedStyles);
+export let sharedStyles = css.activate( SharedStyles);
 
 
 
