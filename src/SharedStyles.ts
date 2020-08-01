@@ -6,10 +6,10 @@ class SharedStyles extends css.StyleDefinition
 {
 	init = [
 		css.$style( "*", {
-			fontFamily: "Verdana, Geneva, Tahoma, sans-serif",
+		// 	// fontFamily: "Verdana, Geneva, Tahoma, sans-serif",
 			boxSizing: "border-box",
-			fontSize: 12,
-			position: "relative",
+		// 	// fontSize: 12,
+		// 	position: "relative",
 		}),
 
 		css.$style( "html", { height: "100%" }),
@@ -44,7 +44,7 @@ class SharedStyles extends css.StyleDefinition
 	hbox = css.$class({
 		display: "flex", flexDirection: "row", alignItems: "center",
 		"&>": [
-			["& > *", { flex: [0, 0, "auto"] }],
+			["*", { flex: [0, 0, "auto"] }],
 			[this.elastic, { flex: "1 1 0", overflow: "auto" }],
 		],
 		"&": [
