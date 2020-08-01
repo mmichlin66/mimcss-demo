@@ -1,68 +1,14 @@
 ﻿import * as mim from "mimbl";
 import * as css from "mimcss"
+import {CommonStyles} from "./CommonStyles"
+
+
+// activate common styles
+let commonStyles = css.activate( CommonStyles);
 
 
 
-class SharedStyles extends css.StyleDefinition
-{
-	init = [
-		css.$style( "*", {
-			fontFamily: "Verdana, Geneva, Tahoma, sans-serif",
-			boxSizing: "border-box",
-			fontSize: 12,
-			position: "relative",
-		}),
-
-		css.$style( "html", { height: "100%" }),
-		css.$style( "body", { height: "100%", margin: 0 }),
-	]
-
-	h = css.$abstract({ fontWeight: "bold", marginTop: 0.75, marginBottom: 0.5 })
-	headers = [
-		css.$style( "h1", { "+": this.h, fontSize: 24 }),
-		css.$style( "h2", { "+": this.h, fontSize: 20 }),
-		css.$style( "h3", { "+": this.h, fontSize: 18 }),
-		css.$style( "h4", { "+": this.h, fontSize: 16 }),
-		css.$style( "h5", { "+": this.h, fontSize: 14 }),
-		css.$style( "h6", { "+": this.h, fontSize: 12 }),
-	]
-
-	defaultInlineGap = css.$var( "width", 8)
-	defaultBlockGap = css.$var( "width", 8)
-
-	spacing = css.$class();
-	elastic = css.$class();
-	vbox = css.$class({
-		display: "flex", flexDirection: "column",
-		"&>": [
-			["*", { flex: [0, 0, "auto"] }],
-			[this.elastic, { flex: "1 1 0", overflow: "auto" }],
-		],
-		"&": [
-			[css.selector`&${this.spacing} > *`, { marginBlockStart: this.defaultBlockGap, marginBlockEnd: this.defaultBlockGap }],
-		]
-	})
-	hbox = css.$class({
-		display: "flex", flexDirection: "row", alignItems: "center",
-		"&>": [
-			["& > *", { flex: [0, 0, "auto"] }],
-			[this.elastic, { flex: "1 1 0", overflow: "auto" }],
-		],
-		"&": [
-			[css.selector`&${this.spacing} > *`, { marginInlineStart: this.defaultInlineGap, marginInlineEnd: this.defaultInlineGap }],
-		]
-	})
-
-
-}
-
-
-
-let sharedStyles = css.activate( SharedStyles);
-
-
-
-class MyStyles extends css.StyleDefinition
+class GradientStyles extends css.StyleDefinition
 {
 	linearGradient = css.$class({
 		width: 200,
@@ -86,9 +32,8 @@ class MyStyles extends css.StyleDefinition
 	})
 }
 
-
-
-let myStyles = css.activate( MyStyles);
+// activate our styles
+let styles = css.activate( GradientStyles);
 
 
 
@@ -96,15 +41,19 @@ class MainForm extends mim.Component
 {
 	public render()
 	{
-		return <div class={[sharedStyles.vbox, sharedStyles.spacing]}>
-			<div class={[sharedStyles.hbox, sharedStyles.spacing]}>
-				<div class={myStyles.linearGradient} />
-				<div class={myStyles.radialGradient} />
-				<div class={myStyles.conic} />
+		return <div class={[commonStyles.vbox, commonStyles.spacing]}>
+			<div class={[commonStyles.hbox, commonStyles.spacing]}>
+				<div class={styles.linearGradient} />
+				<div class={styles.radialGradient} />
+				<div class={styles.conic} />
 			</div>
 		</div>
 	}
 }
 
+
+
+// mount our form under the body element.
+mim.mount( new MainForm());
 
 
