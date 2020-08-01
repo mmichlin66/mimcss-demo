@@ -45,8 +45,7 @@ function config( isDev)
                 patterns: [
                     { from: "index" + htmlSuffix },
 
-                    { from: "node_modules/mimbl/lib/mimbl" + jsSuffix, to: "mimbl/" },
-
+                    { from: "node_modules/mimbl/lib/mimbl" + jsSuffix },
                     { from: "node_modules/mimbl/lib/mimblTypes.d.ts", to: "mimbl/" },
                     { from: "node_modules/mimbl/lib/api/mim.d.ts", to: "mimbl/api/" },
                     { from: "node_modules/mimbl/lib/api/HtmlTypes.d.ts", to: "mimbl/api/" },
@@ -54,7 +53,7 @@ function config( isDev)
                     { from: "node_modules/mimbl/lib/api/LocalStyles.d.ts", to: "mimbl/api/" },
                     { from: "node_modules/mimbl/lib/utils/EventSlot.d.ts", to: "mimbl/utils/" },
 
-                    { from: "node_modules/mimcss/lib/mimcss" + jsSuffix, to: "mimcss/" },
+                    { from: "node_modules/mimcss/lib/mimcss" + jsSuffix },
                     { from: "node_modules/mimcss/lib/mimcssTypes.d.ts", to: "mimcss/" },
                     { from: "node_modules/mimcss/lib/styles/UtilTypes.d.ts", to: "mimcss/styles/" },
                     { from: "node_modules/mimcss/lib/styles/ColorTypes.d.ts", to: "mimcss/styles/" },
