@@ -6,14 +6,17 @@ class SharedStyles extends css.StyleDefinition
 {
 	init = [
 		css.$style( "*", {
-		// 	// fontFamily: "Verdana, Geneva, Tahoma, sans-serif",
 			boxSizing: "border-box",
-		// 	// fontSize: 12,
 		// 	position: "relative",
 		}),
 
 		css.$style( "html", { height: "100%" }),
-		css.$style( "body", { height: "100%", margin: 0 }),
+		css.$style( "body", {
+            height: "100%",
+            margin: 0,
+			fontFamily: "Verdana, Geneva, Tahoma, sans-serif",
+			fontSize: 12,
+        }),
 	]
 
 	h = css.$abstract({ fontWeight: "bold", marginTop: 0.75, marginBottom: 0.5 })

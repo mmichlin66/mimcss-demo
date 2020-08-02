@@ -1,5 +1,3 @@
-const dev_ifdefLoaderOptions = { DEBUG: true };
-const prod_ifdefLoaderOptions = { DEBUG: false };
 const MonacoPlugin = require("monaco-editor-webpack-plugin");
 const CopyPlugin = require('copy-webpack-plugin');
 
@@ -45,6 +43,9 @@ function config( isDev)
                 patterns: [
                     { from: "index" + htmlSuffix },
 
+                    { from: "require.js" },
+                    { from: "MimcssDemoHtmlTemplate.html" },
+
                     { from: "node_modules/mimbl/lib/mimbl" + jsSuffix },
                     { from: "node_modules/mimbl/lib/mimblTypes.d.ts", to: "mimbl/" },
                     { from: "node_modules/mimbl/lib/api/mim.d.ts", to: "mimbl/api/" },
@@ -79,7 +80,6 @@ function config( isDev)
         {
             mimbl: { root: 'mimbl', commonjs2: 'mimbl', commonjs: 'mimbl', amd: 'mimbl' },
             mimcss: { root: 'mimcss', commonjs2: 'mimcss', commonjs: 'mimcss', amd: 'mimcss' },
-            // typescript: { root: 'typescript', commonjs2: 'typescript', commonjs: 'typescript', amd: 'typescript' },
         }
     }
 }
