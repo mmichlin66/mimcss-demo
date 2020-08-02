@@ -216,8 +216,12 @@ export class TsxEditor extends mim.Component
         if (!model)
             return null;
 
+        let modelName = model.uri.toString();
         let worker = await (await ts.getTypeScriptWorker())( model.uri);
-        let resultAny = await worker.getEmitOutput( model.uri.toString());
+
+        let syntaxErrors = await worker.getSyntacticDiagnostics( modelName);
+        let semanticErrors = await worker.getSemanticDiagnostics( modelName);
+        let resultAny = await worker.getEmitOutput( modelName);
         let result = resultAny as monaco.languages.typescript.EmitOutput;
         return result.outputFiles[0].text;
     }

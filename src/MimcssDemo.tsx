@@ -1,7 +1,6 @@
 ﻿import * as mim from "mimbl";
 import * as css from "mimcss"
 import {TsxEditor, IExtraLibInfo} from "./TsxEditor";
-import { IHtmlSelectElementProps } from "mimbl";
 
 
 
@@ -12,7 +11,8 @@ let htmlTemplateMarker = "const replace_me = true;";
 
 // Map of example names to file paths
 let examples = [
-    ["Common Styles", "examples/CommonStyles.tsx"],
+    ["Hello World!", "examples/HelloWorld.tsx"],
+    ["Template", "examples/Template.tsx"],
     ["Gradients", "examples/Gradients.tsx"]
 ];
 
@@ -79,6 +79,7 @@ export class MimcssDemo extends mim.Component
     private iframeRef = new mim.Ref<HTMLIFrameElement>();
 
     // Current file selected in the monaco editor
+    @mim.updatable
     private currentFilePath: string;
 
     // HTML template within which we need to replace a marker with the JavaScript transpiled
@@ -95,6 +96,10 @@ export class MimcssDemo extends mim.Component
         this.editor = new TsxEditor( this.fetchFileContent);
         await this.editor.addExtraLib( mimcssTypings);
         await this.editor.addExtraLib( mimblTypings);
+
+        // open empty file
+        this.editor.loadFile( "examples/Template.tsx");
+        this.currentFilePath = "examples/Template.tsx";
     }
 
     public willUnmount()
@@ -110,7 +115,9 @@ export class MimcssDemo extends mim.Component
             <div class={this.sd.editorPanel}>{this.editor}</div>
             <div class={this.sd.splitter}></div>
             <iframe class={this.sd.htmlPanel} ref={this.iframeRef}></iframe>
-            <div class={this.sd.statusbar}></div>
+            <div class={this.sd.statusbar}>
+                Current example: <span>{this.currentFilePath}</span>
+            </div>
         </div>
     }
 
@@ -150,9 +157,6 @@ export class MimcssDemo extends mim.Component
             return;
 
         let js = await this.editor.compileFile( this.currentFilePath);
-        if (!js)
-            return;
-
         this.iframeRef.r.srcdoc = await this.createHtml(js);
     }
 
@@ -225,7 +229,7 @@ class MimcssDemoStyles extends css.StyleDefinition
 
     toolbar = css.$class({
         backgroundColor: "lightgrey",
-        padding: [4,0]
+        padding: 4
     })
 
     editorToolbar = css.$class({
@@ -239,7 +243,7 @@ class MimcssDemoStyles extends css.StyleDefinition
     })
 
     statusbar = css.$class({
-        height: 20,
+        padding: 4,
         backgroundColor: "lightgrey",
         gridArea: this.statusbarArea,
     })
