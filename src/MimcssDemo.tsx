@@ -40,6 +40,11 @@ const ExtraLibFilePath = "extra-lib-list.json"
 
 
 
+// Path to the HTML file that is a template where we put the transpiled code
+const ResultHtmlTemplate = "result-html-template.html";
+
+
+
 /**
  * The MimcssDemo class is a Mimbl component that allows the user create TypeScript codeusing
  * Mimcss and Mimbl libraries in the monaco editor. The code is then transpiled to JavaScript,
@@ -249,7 +254,7 @@ export class MimcssDemo extends mim.Component
     {
         if (!this.htmlTemplate)
         {
-            this.htmlTemplate = await fetchFileTextContent( "MimcssDemoHtmlTemplate.html");
+            this.htmlTemplate = await fetchFileTextContent( ResultHtmlTemplate);
         }
 
         let configCode = `require.config({paths: {` +
