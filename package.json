@@ -1,5 +1,6 @@
 {
   "name": "mimcss-demo",
+  "private": true,
   "version": "0.7.1",
   "description": "Demonstration of Mimcss capabilities",
   "main": "lib/mimcss-demo.js",
@@ -16,10 +17,6 @@
   ],
   "author": "Michael Michlin",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/mmichlin66/mimcss-demo/issues"
-  },
-  "homepage": "https://github.com/mmichlin66/mimcss-demo#readme",
   "devDependencies": {
     "copy-webpack-plugin": "^6.0.3",
     "css-loader": "^4.1.1",
