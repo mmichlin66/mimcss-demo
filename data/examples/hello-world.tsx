@@ -2,6 +2,7 @@
 import * as css from "mimcss"
 
 
+
 // Define styles for our component
 class MyStyles extends css.StyleDefinition
 {
@@ -28,7 +29,6 @@ class MyStyles extends css.StyleDefinition
         textAlign: "center"
     })
 }
-
 
 
 

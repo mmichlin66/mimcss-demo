@@ -43,17 +43,6 @@ function config( isDev)
                 patterns: [
                     { from: "index" + htmlSuffix },
 
-                    { from: "require.js" },
-                    { from: "MimcssDemoHtmlTemplate.html" },
-
-                    { from: "node_modules/mimbl/lib/mimbl" + jsSuffix },
-                    { from: "node_modules/mimbl/lib/mimblTypes.d.ts", to: "mimbl/" },
-                    { from: "node_modules/mimbl/lib/api/mim.d.ts", to: "mimbl/api/" },
-                    { from: "node_modules/mimbl/lib/api/HtmlTypes.d.ts", to: "mimbl/api/" },
-                    { from: "node_modules/mimbl/lib/api/SvgTypes.d.ts", to: "mimbl/api/" },
-                    { from: "node_modules/mimbl/lib/api/LocalStyles.d.ts", to: "mimbl/api/" },
-                    { from: "node_modules/mimbl/lib/utils/EventSlot.d.ts", to: "mimbl/utils/" },
-
                     { from: "node_modules/mimcss/lib/mimcss" + jsSuffix },
                     { from: "node_modules/mimcss/lib/mimcssTypes.d.ts", to: "mimcss/" },
                     { from: "node_modules/mimcss/lib/styles/UtilTypes.d.ts", to: "mimcss/styles/" },
@@ -71,7 +60,31 @@ function config( isDev)
                     { from: "node_modules/mimcss/lib/api/RuleAPI.d.ts", to: "mimcss/api/" },
                     { from: "node_modules/mimcss/lib/api/SchedulingAPI.d.ts", to: "mimcss/api/" },
 
-                    { from: "examples/**/*" },
+                    { from: "node_modules/mimbl/lib/mimbl" + jsSuffix },
+                    { from: "node_modules/mimbl/lib/mimblTypes.d.ts", to: "mimbl/" },
+                    { from: "node_modules/mimbl/lib/api/mim.d.ts", to: "mimbl/api/" },
+                    { from: "node_modules/mimbl/lib/api/HtmlTypes.d.ts", to: "mimbl/api/" },
+                    { from: "node_modules/mimbl/lib/api/SvgTypes.d.ts", to: "mimbl/api/" },
+                    { from: "node_modules/mimbl/lib/api/LocalStyles.d.ts", to: "mimbl/api/" },
+                    { from: "node_modules/mimbl/lib/utils/EventSlot.d.ts", to: "mimbl/utils/" },
+
+                    { from: "node_modules/mimurl/lib/mimurl" + jsSuffix },
+                    { from: "node_modules/mimurl/lib/mimurlTypes.d.ts", to: "mimurl/" },
+                    { from: "node_modules/mimurl/lib/api.d.ts", to: "mimurl/" },
+
+                    { from: "node_modules/mimcl/lib/mimcl" + jsSuffix },
+                    { from: "node_modules/mimcl/lib/mimclTypes.d.ts", to: "mimcl/" },
+                    { from: "node_modules/mimcl/lib/router/Router.d.ts", to: "mimcl/router/" },
+                    { from: "node_modules/mimcl/lib/popup/Popup.d.ts", to: "mimcl/popup/" },
+                    { from: "node_modules/mimcl/lib/popup/Dialog.d.ts", to: "mimcl/popup/" },
+                    { from: "node_modules/mimcl/lib/popup/MsgBox.d.ts", to: "mimcl/popup/" },
+                    { from: "node_modules/mimcl/lib/tree/TreeApi.d.ts", to: "mimcl/tree/" },
+                    { from: "node_modules/mimcl/lib/virt/VTable.d.ts", to: "mimcl/virt/" },
+
+                    { from: "data/require.js" },
+                    { from: "data/MimcssDemoHtmlTemplate.html" },
+                    { from: "data/extra-lib-list.json" },
+                    { context: "data/", from: "examples/", to: "examples/" },
                 ],
             })
         ],

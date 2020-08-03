@@ -9,55 +9,34 @@ let htmlTemplateMarker = "const replace_me = true;";
 
 
 
-// Map of example names to file paths
-let examples = [
-    ["Hello World!", "examples/HelloWorld.tsx"],
-    ["Template", "examples/Template.tsx"],
-    ["Gradients", "examples/Gradients.tsx"]
-];
-
-
-
-let mimcssTypings: IExtraLibInfo =
+// Type representing information about a single example
+type ExampleInfo =
 {
-    libName: "mimcss",
-    files: [
-        "mimcssTypes.d.ts",
-        "styles/UtilTypes.d.ts",
-        "styles/ColorTypes.d.ts",
-        "styles/ImageTypes.d.ts",
-        "styles/StyleTypes.d.ts",
-        "styles/SelectorTypes.d.ts",
-        "styles/MediaTypes.d.ts",
-        "styles/FontFaceTypes.d.ts",
-        "rules/RuleTypes.d.ts",
-        "api/UtilAPI.d.ts",
-        "api/ColorAPI.d.ts",
-        "api/ImageAPI.d.ts",
-        "api/StyleAPI.d.ts",
-        "api/RuleAPI.d.ts",
-        "api/SchedulingAPI.d.ts"
-    ],
-    rootPath: "mimcss/",
-    index: "mimcssTypes.d.ts",
+    // User-readable example name.
+    name: string;
+
+    // Path to the example file. If undefied or empty, then it is treated as a group name. All
+    // examples after this item and until the next group item will be considered as belonging to
+    // this group.
+    path?: string;
+
+    // optional description
+    descr?: string;
 }
 
+// Type representing the list of examples.
+type ExampleList = ExampleInfo[];
+
+// Path to the file containing the list of examples
+const ExampleListFilePath = "examples/example-list.json"
 
 
-let mimblTypings: IExtraLibInfo =
-{
-    libName: "mimbl",
-    files: [
-        "mimblTypes.d.ts",
-        "api/mim.d.ts",
-        "api/HtmlTypes.d.ts",
-        "api/SvgTypes.d.ts",
-        "api/LocalStyles.d.ts",
-        "utils/EventSlot.d.ts"
-    ],
-    rootPath: "mimbl/",
-    index: "mimblTypes.d.ts",
-}
+
+// Type representing the list of extra libraries.
+type ExtraLibList = IExtraLibInfo[];
+
+// Path to the file containing the list of extra libraries
+const ExtraLibFilePath = "extra-lib-list.json"
 
 
 
@@ -78,9 +57,18 @@ export class MimcssDemo extends mim.Component
     // Reference to the container HTML element
     private iframeRef = new mim.Ref<HTMLIFrameElement>();
 
+    // List of extra libraries read from the extra-lib-list JSON file. It is initially empty.
+    private extraLibList: ExtraLibList = [];
+
+    // Example list read from the example-list JSON file. It is initially empty.
+    private exampleList: ExampleList = [];
+
+    // Map of example paths to ExampleInfo objects
+    private exampleMap = new Map<string,ExampleInfo>();
+
     // Current file selected in the monaco editor
     @mim.updatable
-    private currentFilePath: string;
+    private currentFileInfo: ExampleInfo;
 
     // HTML template within which we need to replace a marker with the JavaScript transpiled
     // from the current file in the editor.
@@ -92,14 +80,27 @@ export class MimcssDemo extends mim.Component
     {
         this.sd = css.activate( MimcssDemoStyles);
 
-        // create and initialize the editor
-        this.editor = new TsxEditor( this.fetchFileContent);
-        await this.editor.addExtraLib( mimcssTypings);
-        await this.editor.addExtraLib( mimblTypings);
+        // create the editor
+        this.editor = new TsxEditor( (path: string, rootPath: string) => fetchFileTextContent( path, rootPath));
+    }
 
-        // open empty file
-        this.editor.loadFile( "examples/Template.tsx");
-        this.currentFilePath = "examples/Template.tsx";
+    public async didMount()
+    {
+        // load list of examples
+        await this.loadExtraLibs();
+
+        // add files with typings
+        for( let libInfo of this.extraLibList)
+            await this.editor.addExtraLib( libInfo);
+
+        // load list of examples
+        await this.loadExamples();
+
+        // open template file
+        this.currentFileInfo = this.exampleMap.get( "examples/basic-template.tsx");
+        this.editor.loadFile( this.currentFileInfo.path);
+
+        this.updateMe( this.renderExampleList);
     }
 
     public willUnmount()
@@ -107,7 +108,7 @@ export class MimcssDemo extends mim.Component
         css.deactivate( this.sd);
     }
 
-    public render()
+    public render(): any
 	{
         return <div class={this.sd.grid}>
             {this.renderEditorToolbar}
@@ -116,22 +117,72 @@ export class MimcssDemo extends mim.Component
             <div class={this.sd.splitter}></div>
             <iframe class={this.sd.htmlPanel} ref={this.iframeRef}></iframe>
             <div class={this.sd.statusbar}>
-                Current example: <span>{this.currentFilePath}</span>
+                Current example: <span>{this.currentFileInfo && this.currentFileInfo.name}</span>
             </div>
         </div>
     }
 
-    public renderEditorToolbar()
+    private renderEditorToolbar(): any
 	{
         return <div class={this.sd.editorToolbar}>
-            Examples: <select change={this.onExampleSelected}>
-                <option value="">-- Select --</option>
-                {examples.map( pair =><option value={pair[1]}>{pair[0]}</option>)}
-            </select>
+            {this.renderExampleList}
         </div>
     }
 
-    public renderHtmlToolbar()
+    private renderExampleList(): any
+	{
+        return <mim.Fragment>
+            Examples: <select change={this.onExampleSelected}>
+                {this.renderExampleOptions()}
+            </select>
+        </mim.Fragment>
+    }
+
+    private renderExampleOptions(): any[]
+	{
+        let options: any[] = [];
+        for( let i = 0; i < this.exampleList.length; i++)
+        {
+            let info = this.exampleList[i];
+            if (info.path)
+                options.push( this.renderExampleOption( info));
+            else
+            {
+                let subOptions: any[] = [];
+                for( let j = i + 1; j < this.exampleList.length; j++)
+                {
+                    let info = this.exampleList[j];
+                    if (info.path)
+                    {
+                        subOptions.push( this.renderExampleOption( info));
+                        i++;
+                    }
+                    else
+                    {
+                        // the next item is a new group
+                        i = j - 1;
+                        break;
+                    }
+                }
+
+                options.push( <optgroup label={info.name} title={info.descr}>
+                    {subOptions}
+                </optgroup>);
+            }
+        }
+
+        return options;
+    }
+
+    private renderExampleOption( info: ExampleInfo): any
+	{
+        let selected = this.currentFileInfo && info.path === this.currentFileInfo.path;
+        return <option value={info.path} title={info.descr} selected={selected}>
+            {info.name}
+        </option>;
+    }
+
+    private renderHtmlToolbar(): any
 	{
         return <div class={this.sd.htmlToolbar}>
             <button id="run" click={this.onRunClicked}
@@ -148,38 +199,79 @@ export class MimcssDemo extends mim.Component
             return;
 
         this.editor.loadFile( path);
-        this.currentFilePath = path;
+        this.currentFileInfo = this.exampleMap.get( path);
     }
 
     private async onRunClicked(): Promise<void>
     {
-        if (!this.currentFilePath)
+        if (!this.currentFileInfo)
             return;
 
-        let js = await this.editor.compileFile( this.currentFilePath);
+        let js = await this.editor.compileFile( this.currentFileInfo.path);
         this.iframeRef.r.srcdoc = await this.createHtml(js);
     }
 
 
 
+    // Load list of extra libraries
+    private async loadExtraLibs()
+    {
+        try
+        {
+            this.extraLibList = await fetchFileJsonContent( ExtraLibFilePath);
+        }
+        catch( err)
+        {
+            console.error( "Cannot load list of extra libraries", err);
+        }
+    }
+
+    // Load example list and put examples into our internal map
+    private async loadExamples()
+    {
+        try
+        {
+            this.exampleList = await fetchFileJsonContent( ExampleListFilePath);
+
+            // our internal map contains only real examples with paths - not group names
+            this.exampleList.forEach( info => {
+                if (info.path)
+                    this.exampleMap.set( info.path, info);
+            });
+        }
+        catch( err)
+        {
+            console.error( "Cannot load list of examples", err);
+        }
+    }
+
     private async createHtml( js:string): Promise<string>
     {
         if (!this.htmlTemplate)
         {
-            this.htmlTemplate = await this.fetchFileContent( "MimcssDemoHtmlTemplate.html");
+            this.htmlTemplate = await fetchFileTextContent( "MimcssDemoHtmlTemplate.html");
         }
 
         return this.htmlTemplate.replace( htmlTemplateMarker, js);
     };
+}
 
 
 
-    private fetchFileContent = async (file: string, rootPath?: string): Promise<string> =>
-    {
-        let path = (rootPath ? rootPath : "") + file;
-        let res = await fetch( path);
-        return await res.text();
-    };
+
+
+
+async function fetchFileTextContent( file: string, rootPath?: string): Promise<string>
+{
+    let path = (rootPath ? rootPath : "") + file;
+    let res = await fetch( path);
+    return await res.text();
+}
+
+async function fetchFileJsonContent<T = any>( file: string, rootPath?: string): Promise<T>
+{
+    let text = await fetchFileTextContent( file, rootPath);
+    return JSON.parse( text) as T;
 }
 
 

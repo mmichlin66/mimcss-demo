@@ -1,0 +1,22 @@
+﻿[
+    { "name": "Templates" },
+    {
+        "name": "Basic Template",
+        "path": "examples/basic-template.tsx",
+        "descr": "Empty style definition and component class"
+    },
+    
+    { "name": "Basic" },
+    {
+        "name": "Hello World!",
+        "path": "examples/hello-world.tsx",
+        "descr": "First simple but real example of defining styles"
+    },
+    
+    { "name": "Advanced" },
+    {
+        "name": "Gradients",
+        "path": "examples/gradients.tsx",
+        "descr": "Demonstrates creating CSS gradients."
+    }
+]

@@ -4,6 +4,13 @@
     <script>
         var exports = {};
 
+        require.config({
+            paths: {
+                "mimcss": "mimcss",
+                "mimbl": "mimbl",
+            }
+        })
+
         require(["mimcss", "mimbl"], function( mimcss, mimbl) {
             const replace_me = true;
         });

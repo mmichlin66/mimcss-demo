@@ -1,0 +1,67 @@
+﻿[
+    {
+        "libName": "mimcss",
+        "url": "mimcss",
+        "files": [
+            "mimcssTypes.d.ts",
+            "styles/UtilTypes.d.ts",
+            "styles/ColorTypes.d.ts",
+            "styles/ImageTypes.d.ts",
+            "styles/StyleTypes.d.ts",
+            "styles/SelectorTypes.d.ts",
+            "styles/MediaTypes.d.ts",
+            "styles/FontFaceTypes.d.ts",
+            "rules/RuleTypes.d.ts",
+            "api/UtilAPI.d.ts",
+            "api/ColorAPI.d.ts",
+            "api/ImageAPI.d.ts",
+            "api/StyleAPI.d.ts",
+            "api/RuleAPI.d.ts",
+            "api/SchedulingAPI.d.ts"
+        ],
+        "rootPath": "mimcss/",
+        "index": "mimcssTypes.d.ts"
+    },
+
+    {
+        "libName": "mimbl",
+        "url": "mimbl",
+        "files": [
+            "mimblTypes.d.ts",
+            "api/mim.d.ts",
+            "api/HtmlTypes.d.ts",
+            "api/SvgTypes.d.ts",
+            "api/LocalStyles.d.ts",
+            "utils/EventSlot.d.ts"
+        ],
+        "rootPath": "mimbl/",
+        "index": "mimblTypes.d.ts"
+    },
+
+    {
+        "libName": "mimurl",
+        "url": "mimurl",
+        "files": [
+            "mimurlTypes.d.ts",
+            "api.d.ts"
+        ],
+        "rootPath": "mimurl/",
+        "index": "mimurlTypes.d.ts"
+    },
+
+    {
+        "libName": "mimcl",
+        "url": "mimcl",
+        "files": [
+            "mimclTypes.d.ts",
+            "router/Router.d.ts",
+            "popup/Popup.d.ts",
+            "popup/Dialog.d.ts",
+            "popup/MsgBox.d.ts",
+            "tree/TreeApi.d.ts",
+            "virt/VTable.d.ts"
+        ],
+        "rootPath": "mimcl/",
+        "index": "mimclTypes.d.ts"
+    }
+]

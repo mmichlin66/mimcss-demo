@@ -33,6 +33,9 @@ export interface IExtraLibInfo
     // Library name
     libName: string,
 
+    // Library url
+    url: string,
+
     // List of file paths
     files: string[],
 
