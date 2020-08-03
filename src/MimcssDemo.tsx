@@ -252,7 +252,18 @@ export class MimcssDemo extends mim.Component
             this.htmlTemplate = await fetchFileTextContent( "MimcssDemoHtmlTemplate.html");
         }
 
-        return this.htmlTemplate.replace( htmlTemplateMarker, js);
+        let configCode = `require.config({paths: {` +
+            this.extraLibList.map( info => `"${info.libName}":"${info.url}"`).join(",") +
+            `}});\n`;
+
+        // build require code that contains the JavaScript
+        let requireCode = `require([` +
+            this.extraLibList.map( info => `"${info.libName}"`).join(",") +
+            `], function(` +
+            this.extraLibList.map( info => `${info.libName}`).join(",") +
+            `){;\n${js}\n});`;
+
+        return this.htmlTemplate.replace( htmlTemplateMarker, configCode + requireCode);
     };
 }
 
