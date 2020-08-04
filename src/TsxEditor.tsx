@@ -50,16 +50,78 @@ export interface IExtraLibInfo
 
 
 /**
+ * The ICompilationResult interface represents the result of compilation of the code in the editor.
+ */
+export interface ICompilationResult
+{
+    // Flag whether file emittion was skipped
+    emitSkipped: boolean;
+
+    // Array of objects representing errors - both syntax and semantic.
+    errors: ICompilationErrorInfo[],
+
+    // Array of file names and their text content
+    outputFiles: { name: string, text: string}[];
+}
+
+
+
+/**
+ * The ICompilationErrorInfo interface represents a single compilation error or warning.
+ */
+export interface ICompilationErrorInfo
+{
+    // True for syntax errors and false for semantic ones.
+    isSyntax: boolean;
+
+    // Category
+    category: CompilationIssueCategory;
+
+    // Category
+    code: number;
+
+    // Row number in the file
+    message: string;
+
+    // Row number in the file
+    row: number;
+
+    // Column number in the row
+    col: number;
+
+    // Length of the offending code
+    length: number;
+
+    // Array of objects representing errors - both syntax and semantic.
+    diag: monaco.languages.typescript.Diagnostic,
+}
+
+
+
+/**
+ * Reported error categories.
+ */
+export const enum CompilationIssueCategory
+{
+    Warning = 0,
+    Error = 1,
+    Suggestion = 2,
+    Message = 3,
+}
+
+
+
+/**
  * The TxtEditor class is a Mimbl component that wraps the monacto editor. It provides convenient
  * methods for adding extra libraries, creating and loading files.
  */
 export class TsxEditor extends mim.Component
 {
+    // Monaco editor object
+    public monacoEditor: monaco.editor.IStandaloneCodeEditor;
+
     // Map of libraries for which typings were added.
     private extraLibInfos = new Map<string,IExtraLibInfo>();
-
-    // Monaco editor object
-    private monacoEditor: monaco.editor.IStandaloneCodeEditor;
 
     // Reference to the container HTML element
     private contaierRef = new mim.Ref<HTMLDivElement>();
@@ -86,6 +148,8 @@ export class TsxEditor extends mim.Component
             module: ts.ModuleKind.CommonJS,
             // noEmit: true,
             typeRoots: ["node_modules"],
+            declaration: true,
+            experimentalDecorators: true,
             jsx: ts.JsxEmit.React,
             jsxFactory: "mim.jsx",
         })
@@ -105,14 +169,6 @@ export class TsxEditor extends mim.Component
             roundedSelection: false,
             mouseWheelZoom: true,
         });
-    
-        // // await this.loadFile( "examples/CommonStyles.tsx");
-        // await this.loadFile( "examples/Gradients.tsx");
-
-        // let js = await this.compileFile( "examples/Gradients.tsx");
-        // console.log( js);
-
-        // this.updateMe();
     }
 
 
@@ -210,10 +266,22 @@ export class TsxEditor extends mim.Component
 
 
     /**
+     * Loads a file from the given with the given path and adds its content to the editor. Path
+     * is either absolute URL or relative to the site root.
+     * @param path
+     */
+    public getFile( path: string): monaco.editor.ITextModel
+    {
+        return this.files.get( path);
+    }
+
+
+
+    /**
      * Compiles the given typescript file to JavaScript.
      * @param path
      */
-    public async compileFile( path: string): Promise<string | null>
+    public async compileFile( path: string): Promise<ICompilationResult | null>
     {
         let model = this.files.get( path);
         if (!model)
@@ -222,11 +290,42 @@ export class TsxEditor extends mim.Component
         let modelName = model.uri.toString();
         let worker = await (await ts.getTypeScriptWorker())( model.uri);
 
-        let syntaxErrors = await worker.getSyntacticDiagnostics( modelName);
-        let semanticErrors = await worker.getSemanticDiagnostics( modelName);
-        let resultAny = await worker.getEmitOutput( modelName);
-        let result = resultAny as monaco.languages.typescript.EmitOutput;
-        return result.outputFiles[0].text;
+        let syntaxDiagnostics = await worker.getSyntacticDiagnostics( modelName);
+        let semanticDiagnostics = await worker.getSemanticDiagnostics( modelName);
+        let output = await worker.getEmitOutput( modelName) as monaco.languages.typescript.EmitOutput;
+
+        // combine syntax and semantix errors into a single array
+        let errors: ICompilationErrorInfo[] = [];
+        for( let diag of syntaxDiagnostics)
+            errors.push( this.convertDiagnosticToError( model, true, diag))
+        for( let diag of semanticDiagnostics)
+            errors.push( this.convertDiagnosticToError( model, false, diag))
+
+        // sort the array by error position
+        errors.sort( (a, b) => a.diag.start - b.diag.start);
+
+        return {
+            emitSkipped: output.emitSkipped,
+            outputFiles: output.outputFiles.map( file => { return { name: file.name, text: file.text}}),
+            errors,
+        }
+    }
+
+
+    private convertDiagnosticToError( model: monaco.editor.ITextModel, isSyntax: boolean,
+        diag: monaco.languages.typescript.Diagnostic): ICompilationErrorInfo
+    {
+        let pos = model.getPositionAt( diag.start);
+        return {
+            isSyntax,
+            category: diag.category,
+            code: diag.code,
+            message: typeof diag.messageText === "string" ? diag.messageText : diag.messageText.messageText,
+            row: pos.lineNumber,
+            col: pos.column,
+            length: diag.length,
+            diag
+        };
     }
 }
 

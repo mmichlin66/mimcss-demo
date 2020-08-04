@@ -1,7 +1,8 @@
 ﻿import * as mim from "mimbl";
 import * as css from "mimcss"
-import {TsxEditor, IExtraLibInfo} from "./TsxEditor";
-
+import {TsxEditor, IExtraLibInfo, ICompilationErrorInfo} from "./TsxEditor";
+import {sharedStyles} from "./SharedStyles";
+import {Range, Position} from "monaco-editor";
 
 
 // Map of example names to file paths
@@ -45,6 +46,19 @@ const ResultHtmlTemplate = "result-html-template.html";
 
 
 
+// Enumeration defining possible states of the right pane
+const enum RightPaneState
+{
+    Clear = 1,
+    Welcome,
+    HTML,
+    CompilationErrors,
+    OtherErrors,
+    Instructions,
+}
+
+
+
 /**
  * The MimcssDemo class is a Mimbl component that allows the user create TypeScript codeusing
  * Mimcss and Mimbl libraries in the monaco editor. The code is then transpiled to JavaScript,
@@ -59,9 +73,6 @@ export class MimcssDemo extends mim.Component
     // Monaco editor wrapper object
     private editor: TsxEditor;
 
-    // Reference to the container HTML element
-    private iframeRef = new mim.Ref<HTMLIFrameElement>();
-
     // List of extra libraries read from the extra-lib-list JSON file. It is initially empty.
     private extraLibList: ExtraLibList = [];
 
@@ -75,9 +86,21 @@ export class MimcssDemo extends mim.Component
     @mim.updatable
     private currentFileInfo: ExampleInfo;
 
+    // State of the right pane
+    private rightPaneState = RightPaneState.Clear;
+
     // HTML template within which we need to replace a marker with the JavaScript transpiled
     // from the current file in the editor.
     private htmlTemplate: string | null = null;
+
+    // HTML as a string created after running a transpiled program.
+    private currentHtml: string = null;
+
+    // List of compilation errors and warnings created after running a transpiled program.
+    private compilationErrors: ICompilationErrorInfo[] = [];
+
+    // Error object if something went wrong
+    private err: Error = null;
 
 
 
@@ -91,7 +114,7 @@ export class MimcssDemo extends mim.Component
 
     public async didMount()
     {
-        // load list of examples
+        // load list of extra libraries
         await this.loadExtraLibs();
 
         // add files with typings
@@ -105,7 +128,7 @@ export class MimcssDemo extends mim.Component
         this.currentFileInfo = this.exampleMap.get( "examples/basic-template.tsx");
         this.editor.loadFile( this.currentFileInfo.path);
 
-        this.updateMe( this.renderExampleList);
+        this.updateMe( this.renderEditorToolbar);
     }
 
     public willUnmount()
@@ -115,12 +138,12 @@ export class MimcssDemo extends mim.Component
 
     public render(): any
 	{
-        return <div class={this.sd.grid}>
+        return <div class={this.sd.masterGrid}>
             {this.renderEditorToolbar}
             {this.renderHtmlToolbar}
-            <div class={this.sd.editorPanel}>{this.editor}</div>
+            <div class={this.sd.leftPane}>{this.editor}</div>
             <div class={this.sd.splitter}></div>
-            <iframe class={this.sd.htmlPanel} ref={this.iframeRef}></iframe>
+            {this.renderRightPane}
             <div class={this.sd.statusbar}>
                 Current example: <span>{this.currentFileInfo && this.currentFileInfo.name}</span>
             </div>
@@ -129,15 +152,17 @@ export class MimcssDemo extends mim.Component
 
     private renderEditorToolbar(): any
 	{
-        return <div class={this.sd.editorToolbar}>
-            {this.renderExampleList}
+        return <div class={[this.sd.editorToolbar, sharedStyles.spacedHBox]}>
+            {this.renderExampleList()}
+            <button id="run" click={this.onRunClicked} title="Compile code and display results">Run</button>
         </div>
     }
 
     private renderExampleList(): any
 	{
         return <mim.Fragment>
-            Examples: <select change={this.onExampleSelected}>
+            <span>Examples</span>
+            <select change={this.onExampleSelected}>
                 {this.renderExampleOptions()}
             </select>
         </mim.Fragment>
@@ -189,10 +214,45 @@ export class MimcssDemo extends mim.Component
 
     private renderHtmlToolbar(): any
 	{
-        return <div class={this.sd.htmlToolbar}>
-            <button id="run" click={this.onRunClicked}
-                title="Compile code and display results">Run</button>
+        return <div class={[this.sd.htmlToolbar, sharedStyles.spacedHBox]}>
+            <button id="run" click={this.onClearClicked} title="Clear the right pane">Clear</button>
         </div>
+    }
+
+    private renderRightPane(): any
+	{
+        let content: any;
+        switch( this.rightPaneState)
+        {
+            case RightPaneState.CompilationErrors:
+                content = <div class={this.sd.errorsGrid}>
+                    <span class={this.sd.errorsTitle}>There were compilation errors. Fix them and try again.</span>
+                    {this.compilationErrors.map( e => this.renderCompilationError(e))}
+                </div>;
+                break;
+
+            case RightPaneState.HTML:
+                content = <iframe srcdoc={this.currentHtml} class={this.sd.iframe} />;
+                break
+
+            default:
+                content = <div/>;
+                break
+        }
+
+        return <div class={this.sd.rightPane}>{content}</div>
+    }
+
+    private renderCompilationError( e: ICompilationErrorInfo): any
+	{
+        return <mim.Fragment>
+            <span>{`TS${e.code}`}</span>
+            <span>at</span>
+            <span click={() => this.gotoPosition( e.row, e.col, e.length)} style={{cursor: "pointer", color: "blue"}}>
+                {`${e.row},${e.col}`}
+            </span>
+            <span>{e.message}</span>
+        </mim.Fragment>
     }
 
 
@@ -205,6 +265,7 @@ export class MimcssDemo extends mim.Component
 
         this.editor.loadFile( path);
         this.currentFileInfo = this.exampleMap.get( path);
+        this.setRightPaneState( RightPaneState.Clear);
     }
 
     private async onRunClicked(): Promise<void>
@@ -212,11 +273,47 @@ export class MimcssDemo extends mim.Component
         if (!this.currentFileInfo)
             return;
 
-        let js = await this.editor.compileFile( this.currentFileInfo.path);
-        this.iframeRef.r.srcdoc = await this.createHtml(js);
+        try
+        {
+            let result = await this.editor.compileFile( this.currentFileInfo.path);
+            this.currentHtml = await this.createHtml( result.outputFiles[0].text);
+            this.compilationErrors = result.errors;
+            this.err = null;
+            if (result.errors.length === 0)
+                this.setRightPaneState( RightPaneState.HTML);
+            else
+                this.setRightPaneState( RightPaneState.CompilationErrors);
+        }
+        catch( err)
+        {
+            this.currentHtml = null;
+            this.compilationErrors = null;
+            this.setRightPaneState( RightPaneState.OtherErrors);
+        }
+
+        this.updateMe( this.renderRightPane);
+    }
+
+    private onClearClicked(): void
+    {
+        this.setRightPaneState( RightPaneState.Clear);
     }
 
 
+
+    private setRightPaneState( state: RightPaneState): void
+    {
+        this.rightPaneState = state;
+        this.updateMe( this.renderRightPane);
+    }
+
+    private gotoPosition( row: number, col: number, length: number = 0): void
+    {
+        let range = new Range( row, col, row, col + length);
+        this.editor.monacoEditor.revealRange( range);
+        this.editor.monacoEditor.setPosition( new Position( row, col));
+        this.editor.monacoEditor.focus();
+    }
 
     // Load list of extra libraries
     private async loadExtraLibs()
@@ -301,7 +398,7 @@ class MimcssDemoStyles extends css.StyleDefinition
     statusbarArea = css.$gridarea();
     splitterArea = css.$gridarea();
 
-    grid = css.$class({
+    masterGrid = css.$class({
         width: "100%",
         height: "100%",
         overflow: "hidden",
@@ -319,25 +416,24 @@ class MimcssDemoStyles extends css.StyleDefinition
     })
 
     panel = css.$class({
-        padding: 4,
         border: "2px inset",
         placeSelf: "stretch",
         minWidth: 200,
     })
 
-    editorPanel = css.$class({
+    leftPane = css.$class({
         "+": this.panel,
         gridArea: this.editorContentArea,
     })
 
-    htmlPanel = css.$class({
+    rightPane = css.$class({
         "+": this.panel,
         gridArea: this.htmlContentArea,
     })
 
     toolbar = css.$class({
         backgroundColor: "lightgrey",
-        padding: 4
+        padding: [4, 0],
     })
 
     editorToolbar = css.$class({
@@ -360,6 +456,26 @@ class MimcssDemoStyles extends css.StyleDefinition
         width: 8,
         backgroundColor: "lightgrey",
         gridArea: this.splitterArea,
+    })
+
+    iframe = css.$class({
+        width: "100%",
+        height: "100%",
+        border: "none"
+    })
+
+    errorsGrid = css.$class({
+        padding: 4,
+        display: "grid",
+        gap: [8,12],
+        gridTemplateColumns: [css.repeat( 3, "auto"), "1fr"],
+        gridAutoRows: "auto"
+    })
+
+    errorsTitle = css.$class({
+        gridColumn: css.span(4),
+        padding: [4,0],
+        fontWeight: "bold"
     })
 }
 

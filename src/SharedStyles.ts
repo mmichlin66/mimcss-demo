@@ -32,7 +32,7 @@ class SharedStyles extends css.StyleDefinition
 	defaultInlineGap = css.$var( "width", 8)
 	defaultBlockGap = css.$var( "width", 8)
 
-	spacing = css.$class();
+	spaced = css.$class();
 	elastic = css.$class();
 	vbox = css.$class({
 		display: "flex", flexDirection: "column",
@@ -41,7 +41,7 @@ class SharedStyles extends css.StyleDefinition
 			[this.elastic, { flex: "1 1 0", overflow: "auto" }],
 		],
 		"&": [
-			[css.selector`&${this.spacing} > *`, { marginBlockStart: this.defaultBlockGap, marginBlockEnd: this.defaultBlockGap }],
+			[css.selector`&${this.spaced} > *`, { marginBlockStart: this.defaultBlockGap, marginBlockEnd: this.defaultBlockGap }],
 		]
 	})
 	hbox = css.$class({
@@ -51,11 +51,12 @@ class SharedStyles extends css.StyleDefinition
 			[this.elastic, { flex: "1 1 0", overflow: "auto" }],
 		],
 		"&": [
-			[css.selector`&${this.spacing} > *`, { marginInlineStart: this.defaultInlineGap, marginInlineEnd: this.defaultInlineGap }],
+			[css.selector`&${this.spaced} > *`, { marginInlineStart: this.defaultInlineGap, marginInlineEnd: this.defaultInlineGap }],
 		]
 	})
 
-
+    spacedHBox = css.$classname( this.hbox, this.spaced);
+    spacedVBox = css.$classname( this.vbox, this.spaced);
 }
 
 
