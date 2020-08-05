@@ -83,10 +83,11 @@ export class MimcssDemo extends mim.Component
     private exampleMap = new Map<string,ExampleInfo>();
 
     // Current file selected in the monaco editor
-    @mim.updatable
+    @mim.trigger
     private currentFileInfo: ExampleInfo;
 
     // State of the right pane
+    @mim.trigger
     private rightPaneState = RightPaneState.Clear;
 
     // HTML template within which we need to replace a marker with the JavaScript transpiled
@@ -127,8 +128,6 @@ export class MimcssDemo extends mim.Component
         // open template file
         this.currentFileInfo = this.exampleMap.get( "examples/basic-template.tsx");
         this.editor.loadFile( this.currentFileInfo.path);
-
-        this.updateMe( this.renderEditorToolbar);
     }
 
     public willUnmount()
@@ -265,7 +264,7 @@ export class MimcssDemo extends mim.Component
 
         this.editor.loadFile( path);
         this.currentFileInfo = this.exampleMap.get( path);
-        this.setRightPaneState( RightPaneState.Clear);
+        this.rightPaneState = RightPaneState.Clear;
     }
 
     private async onRunClicked(): Promise<void>
@@ -280,32 +279,24 @@ export class MimcssDemo extends mim.Component
             this.compilationErrors = result.errors;
             this.err = null;
             if (result.errors.length === 0)
-                this.setRightPaneState( RightPaneState.HTML);
+                this.rightPaneState = RightPaneState.HTML;
             else
-                this.setRightPaneState( RightPaneState.CompilationErrors);
+                this.rightPaneState = RightPaneState.CompilationErrors;
         }
         catch( err)
         {
             this.currentHtml = null;
             this.compilationErrors = null;
-            this.setRightPaneState( RightPaneState.OtherErrors);
+            this.rightPaneState = RightPaneState.OtherErrors;
         }
-
-        this.updateMe( this.renderRightPane);
     }
 
     private onClearClicked(): void
     {
-        this.setRightPaneState( RightPaneState.Clear);
+        this.rightPaneState = RightPaneState.Clear;
     }
 
 
-
-    private setRightPaneState( state: RightPaneState): void
-    {
-        this.rightPaneState = state;
-        this.updateMe( this.renderRightPane);
-    }
 
     private gotoPosition( row: number, col: number, length: number = 0): void
     {
