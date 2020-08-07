@@ -82,8 +82,7 @@ function config( isDev)
                     { from: "node_modules/mimcl/lib/virt/VTable.d.ts", to: "mimcl/virt/" },
 
                     { from: "data/require.js" },
-                    { from: "data/result-html-template.html" },
-                    { from: "data/extra-lib-list.json" },
+                    { from: "data/playground-config.json" },
                     { context: "data/", from: "examples/", to: "examples/" },
                 ],
             })

@@ -11,6 +11,14 @@
             "command": "build",
             "alignment": "left",
             "priority": 1
+        },
+        {
+            "text": "mimcss-demo copy examples",
+            "color": "pink",
+            "commandType": "exec",
+            "command": "xcopy data\\examples\\* lib\\examples\\ /s /i /y /d",
+            "alignment": "left",
+            "priority": 1
         }
     ]
 }
