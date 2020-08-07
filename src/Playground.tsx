@@ -183,12 +183,13 @@ export class Playground extends mim.Component
         if (this.config.firstExample)
         {
             // open first example if the config indicates so
-            this.currentFileInfo = this.exampleMap.get( this.config.firstExample);
-            if (this.currentFileInfo)
+            let fileInfo = this.exampleMap.get( this.config.firstExample);
+            if (fileInfo)
             {
                 try
                 {
-                    await this.loadSelectFile( this.currentFileInfo.path);
+                    await this.loadSelectFile( fileInfo.path);
+                    this.currentFileInfo = fileInfo;
                 }
                 catch( err)
                 {
@@ -360,17 +361,18 @@ export class Playground extends mim.Component
             return;
 
         this.clearRighPaneData();
-        this.currentFileInfo = this.exampleMap.get( path);
-
-        if (this.currentFileInfo === ScratchPadFileInfo)
+        let fileInfo = this.exampleMap.get( path);
+        if (fileInfo === ScratchPadFileInfo)
         {
             this.addSelectFile( ScratchPadFileInfo.path, "");
+            this.currentFileInfo = ScratchPadFileInfo;
         }
         else
         {
             try
             {
                 await this.loadSelectFile( path);
+                this.currentFileInfo = fileInfo;
             }
             catch( err)
             {

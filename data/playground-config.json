@@ -97,7 +97,7 @@
         { "name": "Advanced" },
         {
             "name": "Scheduling",
-            "path": "examples/scheduling.tsx",
+            "path": "examples/under-construction.tsx",
             "descr": "Demonstrates custom scheduler."
         }
     ],

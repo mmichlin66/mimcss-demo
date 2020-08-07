@@ -13,10 +13,10 @@
             "priority": 1
         },
         {
-            "text": "mimcss-demo copy examples",
+            "text": "mimcss-demo copy data",
             "color": "pink",
             "commandType": "exec",
-            "command": "xcopy data\\examples\\* lib\\examples\\ /s /i /y /d",
+            "command": "xcopy data\\* lib\\ /s /i /y /d",
             "alignment": "left",
             "priority": 1
         }
