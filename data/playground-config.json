@@ -96,6 +96,11 @@
         
         { "name": "Advanced" },
         {
+            "name": "Themes",
+            "path": "examples/themes.tsx",
+            "descr": "Demonstrates changing themes using style definition inheritance."
+        },
+        {
             "name": "Scheduling",
             "path": "examples/under-construction.tsx",
             "descr": "Demonstrates custom scheduler."
