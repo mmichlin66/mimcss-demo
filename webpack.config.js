@@ -44,7 +44,7 @@ function config( isDev)
                     { from: "index" + htmlSuffix },
 
                     { from: "node_modules/mimcss/lib/mimcss" + jsSuffix },
-                    { from: "node_modules/mimcss/lib/mimcssTypes.d.ts", to: "mimcss/" },
+                    { from: "node_modules/mimcss/lib/index.d.ts", to: "mimcss/" },
                     { from: "node_modules/mimcss/lib/styles/UtilTypes.d.ts", to: "mimcss/styles/" },
                     { from: "node_modules/mimcss/lib/styles/ColorTypes.d.ts", to: "mimcss/styles/" },
                     { from: "node_modules/mimcss/lib/styles/ImageTypes.d.ts", to: "mimcss/styles/" },
@@ -70,7 +70,7 @@ function config( isDev)
                     { from: "node_modules/mimbl/lib/api/mim.d.ts", to: "mimbl/api/" },
 
                     { from: "node_modules/mimurl/lib/mimurl" + jsSuffix },
-                    { from: "node_modules/mimurl/lib/mimurlTypes.d.ts", to: "mimurl/" },
+                    { from: "node_modules/mimurl/lib/index.d.ts", to: "mimurl/" },
                     { from: "node_modules/mimurl/lib/api.d.ts", to: "mimurl/" },
 
                     { from: "node_modules/mimcl/lib/mimcl" + jsSuffix },
