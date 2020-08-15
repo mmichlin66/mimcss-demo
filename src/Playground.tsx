@@ -505,6 +505,8 @@ export class Playground extends mim.Component
                     this.exampleMap.set( info.path, info);
             });
         }
+
+        return errors;
     }
 
 
