@@ -25,25 +25,32 @@ class MyStyles extends css.StyleDefinition
         overflow: "auto",
     })
 
-    innerBox = css.$class({
-        border: [3, "solid"],
-        padding: 8,
+    orangeBox = css.$class({
+        border: [3, "solid", "red"],
+        backgroundColor: "orange",
+
+        // 8px
         borderRadius: 8,
+
+        // use numeric functions to size and position the box. Since we are using the Len object,
+        // the parameters will only accept values compatible with the CSS <length> type.
+        // Note: there are better ways to position and size elements - we are just demonstrating
+        // the Mimcss numeric functions.
+        width: css.Len.calc`100% - ${200}`,
     })
 
-    orangeBox = css.$class({
-        "+": this.innerBox,
-        backgroundColor: "orange",
-        borderColor: "red",
+    blueBox = css.$class({
+        border: [3, "solid", "blue"],
+        backgroundColor: "cyan",
+        marginTop: 20,
 
-        // use numeric functions to size and position the box. Since we are using the Len object, the
-        // parameters will only accept values compatible with the CSS <length> type.
-        // Note: there are better ways to position elements - we are just demonstrating the Mimcss
-        // numeric functions.
-        width: css.Len.calc`100% - ${200}`,
+        // The Len.max() function accepts any number of parameters. Each parameter can be of any
+        // type corresponding to the CSS `<length>` type.
+        width: css.Len.max( "80%", 300, css.inch(4)),
 
-        // max( 100%, 30px, 2.5em)
-        marginLeft: css.Len.max( "5%", 30, 1.2),
+        // padding can be specified as an array of 2 to 3 elements:
+        // 10px 1.4em 0.5cm 1%
+        padding: [10, 1.4, css.cm(0.5), "1%"],
     })
 
     init = [
@@ -59,7 +66,7 @@ let styles = css.activate( MyStyles);
 
 
 // Define component that displays "Hello World!"
-class HelloWorld extends mim.Component
+class MyComponent extends mim.Component
 {
     // Render our component's HTML content
 	public render()
@@ -67,7 +74,10 @@ class HelloWorld extends mim.Component
         // specify class by using the property of our style definition class
 		return <div class={styles.outerBox}>
             <div class={styles.orangeBox}>
-                This box uses Len.calc() and Len.min() methods
+                This box uses Len.calc() function
+            </div>
+            <div class={styles.blueBox}>
+                This box uses Len.max() function
             </div>
         </div>
 	}
@@ -76,6 +86,6 @@ class HelloWorld extends mim.Component
 
 
 // Mount our component under the body element.
-mim.mount( new HelloWorld());
+mim.mount( new MyComponent());
 
 

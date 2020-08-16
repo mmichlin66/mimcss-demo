@@ -38,31 +38,6 @@
                 "api/mim.d.ts"
             ],
             "rootPath": "mimbl/"
-        },
-
-        {
-            "libName": "mimurl",
-            "url": "mimurl",
-            "files": [
-                "index.d.ts",
-                "api.d.ts"
-            ],
-            "rootPath": "mimurl/"
-        },
-
-        {
-            "libName": "mimcl",
-            "url": "mimcl",
-            "files": [
-                "index.d.ts",
-                "router/Router.d.ts",
-                "popup/Popup.d.ts",
-                "popup/Dialog.d.ts",
-                "popup/MsgBox.d.ts",
-                "tree/TreeApi.d.ts",
-                "virt/VTable.d.ts"
-            ],
-            "rootPath": "mimcl/"
         }
     ],
 

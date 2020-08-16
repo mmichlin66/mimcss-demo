@@ -1,4 +1,4 @@
-﻿// This example demonstrate how style definition class inheritance can be used to change styles
+﻿// This example demonstrates how style definition class inheritance can be used to change styles
 // of many elements just by activating and deactivating different style definition classes and
 // without re-rendering the HTML content.
 
