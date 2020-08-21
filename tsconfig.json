@@ -4,6 +4,7 @@
 		{ "path": "../mimbl" }
 	],
 	"compilerOptions": {
+        "composite": true,
 		"sourceMap": true,
 		"noImplicitAny": false,
 		"strictNullChecks": false,
@@ -15,13 +16,10 @@
         "moduleResolution": "node",
 		"target": "ES2017",
 		"lib": [ "ES2017", "dom" ],
+		"rootDir": "src",
 		"outDir": "./lib/",
 		"jsx": "react",
 		"jsxFactory": "mim.jsx",
-		"baseUrl": "./",
-		"paths": {
-			"*": [ "node_modules/*", "*"]
-		},
 	},
 
 	"include": [

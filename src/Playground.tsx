@@ -208,7 +208,7 @@ export class Playground extends mim.Component
             this.addOrSelectFile( ScratchPadFileInfo.path, "");
             this.currentFileInfo = ScratchPadFileInfo;
         }
-    
+
         progress.close();
     }
 
@@ -400,11 +400,12 @@ export class Playground extends mim.Component
         // first clear the right panel
         this.clearRighPaneData();
 
-        let progress = new mim.ProgressBox( `Compiling file '${this.currentFileInfo.path}'`, "Please wait");
-        progress.showModal();
+        let progress = new mim.ProgressBox( undefined, "Please wait");
+        progress.showModalWithDelay( 750);
 
         try
         {
+            progress.setContent( `Compiling file '${this.currentFileInfo.path}'`);
             let result = await this.compileFile( this.currentFileInfo.path);
             this.compilationErrors = result.errors;
             if (result.errors.length === 0)
@@ -530,7 +531,7 @@ export class Playground extends mim.Component
      * Adds a file with the given content to the editor. If the file with the given path already
      * exists in the editor, it is is simply selected and the content is ignored.
      * @param path
-     * @param content 
+     * @param content
      */
     private addOrSelectFile( path: string, content: string): void
     {
