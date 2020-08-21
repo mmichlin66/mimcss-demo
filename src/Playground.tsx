@@ -159,8 +159,11 @@ export class Playground extends mim.Component
 
     public async didMount()
     {
+        let progress = new mim.ProgressBox( "Loading playground configuration...", "Please wait");
+        progress.showModal();
+
         // load and parse configuration file
-        let errors = await this.loadConfig();
+        let errors = await this.loadConfig( progress);
         if (errors && errors.length > 0)
         {
             this.otherErrors = errors;
@@ -188,22 +191,25 @@ export class Playground extends mim.Component
             {
                 try
                 {
-                    await this.loadSelectFile( fileInfo.path);
+                    await this.loadOrSelectFile( fileInfo.path);
                     this.currentFileInfo = fileInfo;
                 }
                 catch( err)
                 {
                     this.otherErrors = errors;
                     this.rightPaneState = RightPaneState.OtherErrors;
+                    progress.close();
                     return;
                 }
             }
         }
         else
         {
-            this.addSelectFile( ScratchPadFileInfo.path, "");
+            this.addOrSelectFile( ScratchPadFileInfo.path, "");
             this.currentFileInfo = ScratchPadFileInfo;
         }
+    
+        progress.close();
     }
 
     public willUnmount()
@@ -364,14 +370,16 @@ export class Playground extends mim.Component
         let fileInfo = this.exampleMap.get( path);
         if (fileInfo === ScratchPadFileInfo)
         {
-            this.addSelectFile( ScratchPadFileInfo.path, "");
+            this.addOrSelectFile( ScratchPadFileInfo.path, "");
             this.currentFileInfo = ScratchPadFileInfo;
         }
         else
         {
             try
             {
-                await this.loadSelectFile( path);
+                let promise = this.loadOrSelectFile( path);
+                mim.ProgressBox.showUntil( promise, `Loading file '${path}'...`, "Please wait");
+                await promise;
                 this.currentFileInfo = fileInfo;
             }
             catch( err)
@@ -392,13 +400,19 @@ export class Playground extends mim.Component
         // first clear the right panel
         this.clearRighPaneData();
 
+        let progress = new mim.ProgressBox( `Compiling file '${this.currentFileInfo.path}'`, "Please wait");
+        progress.showModal();
+
         try
         {
             let result = await this.compileFile( this.currentFileInfo.path);
-            this.currentHtml = await this.createHtml( result.outputFiles[0].text);
             this.compilationErrors = result.errors;
             if (result.errors.length === 0)
+            {
+                progress.setContent( "Creating HTML file...")
+                this.currentHtml = await this.createHtml( result.outputFiles[0].text);
                 this.rightPaneState = RightPaneState.HTML;
+            }
             else
                 this.rightPaneState = RightPaneState.CompilationErrors;
         }
@@ -407,10 +421,9 @@ export class Playground extends mim.Component
             this.otherErrors = [err];
             this.rightPaneState = RightPaneState.OtherErrors;
         }
-        finally
-        {
-            this.editor.focus();
-        }
+
+        progress.close();
+        this.editor.focus();
     }
 
     private onClearClicked(): void
@@ -443,11 +456,12 @@ export class Playground extends mim.Component
      * Loads and parses playground configuration. Returns array of errors. Empty error indicates
      * full success.
      */
-    private async loadConfig(): Promise<Error[]>
+    private async loadConfig( progress: mim.ProgressBox): Promise<Error[]>
     {
         // read configuration file; if we can't, create an empty configuration
         try
         {
+            progress.setContent( "Loading playground configuration file...")
             this.config = await fetchFileJsonContent( ConfigPath);
         }
         catch( err)
@@ -482,6 +496,7 @@ export class Playground extends mim.Component
                 {
                     try
                     {
+                        progress.setContent( `Loading file '${file}'...`)
                         let fileContent = await fetchFileTextContent( file, libInfo.rootPath);
                         let filePath = file === libInfo.index ? "index.d.ts" : file;
                         ts.typescriptDefaults.addExtraLib( fileContent, `${libRootPath}/${filePath}`)
@@ -517,7 +532,7 @@ export class Playground extends mim.Component
      * @param path
      * @param content 
      */
-    private addSelectFile( path: string, content: string): void
+    private addOrSelectFile( path: string, content: string): void
     {
         let model = this.files.get( path);
         if (!model)
@@ -539,13 +554,13 @@ export class Playground extends mim.Component
      * exists in the editor, it is is simply selected.
      * @param path
      */
-    private async loadSelectFile( path: string): Promise<void>
+    private async loadOrSelectFile( path: string): Promise<void>
     {
         let model = this.files.get( path);
         if (!model)
         {
             let content = await fetchFileTextContent( path);
-            this.addSelectFile( path, content);
+            this.addOrSelectFile( path, content);
         }
         else
         {
