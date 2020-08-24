@@ -1,6 +1,7 @@
 ﻿import * as mim from "mimbl";
 import * as css from "mimcss"
 import * as tsplay from "mim-tsplay"
+import { BorderPropParams } from "./props/Border";
 
 /**
  * The Extension class is a playground extension that demonstrates Mimcss capabilities.
@@ -36,10 +37,13 @@ class Extension implements tsplay.IPlaygroundExtension
         let arr: (tsplay.ITemplateCodeSnippetInfo | tsplay.ICustomCodeSnippetInfo)[] =
         [
             {
-                category: "Imports",
-                name: "Mimcss",
-                description: "Defines import from mimcss library",
-                template: 'import * as css from "mimcss"\n',
+                category: "Properties",
+                name: "Border",
+                description: "Defines 'border' style property'",
+                async createSnippet(): Promise<string>
+                {
+                    return await new BorderPropParams( "border").showModal();
+                },
             },
         ];
 
