@@ -1,7 +1,7 @@
 {
   "name": "mimcss-demo",
   "private": true,
-  "version": "0.7.1",
+  "version": "0.7.7",
   "description": "Demonstration of Mimcss capabilities",
   "main": "lib/mimcss-demo.js",
   "scripts": {
@@ -18,20 +18,15 @@
   "author": "Michael Michlin",
   "license": "MIT",
   "devDependencies": {
-    "copy-webpack-plugin": "^6.0.3",
-    "css-loader": "^4.1.1",
-    "file-loader": "^6.0.0",
     "ifdef-loader": "^2.1.5",
-    "monaco-editor-webpack-plugin": "^1.9.0",
     "source-map-loader": "^0.2.4",
-    "style-loader": "^1.2.1",
     "typescript": "^3.9.7",
     "webpack": "^4.44.0",
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
-    "mimbl": "^0.3.2",
-    "mimcss": "^0.7.1",
-    "monaco-editor": "^0.20.0"
+    "mimcss": "^0.7.7",
+    "mimbl": "^0.5.1",
+    "mim-tsplay": "^0.1.1"
   }
 }
