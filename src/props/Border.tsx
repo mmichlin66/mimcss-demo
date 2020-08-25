@@ -20,7 +20,7 @@ export class BorderPropParams extends mim.Dialog
 {
     constructor( propName: "border" | "outline")
     {
-        super( undefined, `${propName} property parameters`);
+        super( undefined, `Style property '${propName}'`);
         this.propName = propName;
 
         this.addButton( { id: "ok", content: "OK", callback: () => this.onOKClicked()})
@@ -63,8 +63,6 @@ export class BorderPropParams extends mim.Dialog
             <div class={tsplay.sharedStyles.vbox}>
                 <strong>Color</strong>
                 {this.colorPicker}
-                {/* <input type="text" defaultValue={defaultColor.toString()}
-                        input={(e) => this.color = (e.target as HTMLInputElement).value as keyof INamedColors}></input> */}
             </div>
         </div>
     }
@@ -126,16 +124,15 @@ export class BorderPropParams extends mim.Dialog
     private get result(): string
     {
         let size = typeof this.size === "string" ? `"${this.size}"` : this.size.toString();
-
-        return `${this.propName}: [${size}, "${this.style}", ${this.mimcssColorString}]`;
+        return `${this.propName}: [${size}, "${this.style}", ${this.mimcssColorString}],`;
     }
 
     // CSS equivalent of the resulting string
     @mim.computed
     private get cssResult(): string
     {
-        return this.propName + ": " + css.getStylePropValue( this.propName,
-            [this.size, this.style, this.color]);
+        return `this.propName: ${css.getStylePropValue( this.propName,
+            [this.size, this.style, this.color])};`;
     }
 
     // Name of the property - border or outline
