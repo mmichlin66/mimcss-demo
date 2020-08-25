@@ -35,6 +35,10 @@ export class DemoStyles extends css.StyleDefinition
     paramsPane = css.$class({
         "+": this.panel,
         gridArea: this.paramsArea,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        gap: 16
     })
 
     demoPane = css.$class({
@@ -54,6 +58,20 @@ export class DemoStyles extends css.StyleDefinition
     cssResultPane = css.$class({
         "+": this.panel,
         gridArea: this.cssResultArea,
+    })
+
+    controlBox = css.$class({
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        gap: 4,
+    })
+
+    controlRow = css.$class({
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 4,
     })
 
 

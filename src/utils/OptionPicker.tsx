@@ -17,7 +17,7 @@ export type OptionPickerItem = string | [string, string];
  */
 export interface IOptionPickerEvents
 {
-    change( itemID): void;
+    change( itemID: string): void;
 }
 
 
@@ -38,11 +38,11 @@ export class OptionPicker extends mim.Component
                 : null;
     }
 
-    /** Events exposed by the ObjectPicker component */
+    /** Events exposed by the OptionPicker component */
     public get events(): mim.MultiEventSlot<IOptionPickerEvents> { return this._events; }
 
     public get selectedItemID(): string { return this._selectedItemID; }
-    public set selectedItemID( v: string) { this._selectedItemID = v; }
+    public set selectedItemID( v: string) { this._selectedItemID = v; this.updateMe(); }
 
     public willUnmount(): void
     {
@@ -65,9 +65,10 @@ export class OptionPicker extends mim.Component
         </select>
     }
 
-    private async onItemSelected( e: Event): Promise<void>
+    private onItemSelected( e: Event): void
     {
         let itemID = (e.target as HTMLSelectElement).value;
+        this._selectedItemID = itemID;
         this._events.change.fire( itemID);
     }
 
@@ -75,7 +76,6 @@ export class OptionPicker extends mim.Component
     private items: OptionPickerItem[];
 
     // Currently selected item ID
-    @mim.trigger
     private _selectedItemID: string;
 
     // Events

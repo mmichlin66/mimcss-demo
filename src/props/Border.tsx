@@ -4,10 +4,11 @@ import * as tsplay from "mim-tsplay"
 import {demoStyles} from "../utils/DemoStyles"
 import { BorderStyle_StyleType, BorderStyle_Keyword, INamedColors } from "mimcss";
 import { OptionPicker } from "../utils/OptionPicker";
+import { ColorPicker } from "../utils/ColorPicker";
 
 
 
-let defaultSize: css.CssLength = 1;
+let defaultSize: css.CssLength = 4;
 let defaultStyle: BorderStyle_Keyword = "solid";
 let defaultColor: css.CssColor = "black";
 
@@ -32,6 +33,10 @@ export class BorderPropParams extends mim.Dialog
         this.stylePicker = new OptionPicker( ["none", "hidden", "dotted", "dashed", "solid", "double",
             "groove", "ridge", "inset", "outset"], defaultStyle);
         this.stylePicker.events.change.attach( this.onStyleChanged);
+
+        this.colorPicker = new ColorPicker();
+        this.colorPicker.events.change.attach( this.onColorChanged);
+        this.mimcssColorString = this.colorPicker.selectedMimcssColorString;
     }
 
     public renderBody(): any
@@ -47,21 +52,19 @@ export class BorderPropParams extends mim.Dialog
     public renderParams(): any
     {
         return <div class={demoStyles.paramsPane}>
-            <div class={tsplay.playgroundStyles.codeSnippetParams}>
-                <div class={tsplay.sharedStyles.vbox}>
-                    <strong>Size</strong>
-                    <input type="text" defaultValue={defaultSize.toString()}
-                            input={(e) => this.setSize( (e.target as HTMLInputElement).value)}></input>
-                </div>
-                <div class={tsplay.sharedStyles.vbox}>
-                    <strong>Style</strong>
-                    {this.stylePicker}
-                </div>
-                <div class={tsplay.sharedStyles.vbox}>
-                    <strong>Color</strong>
-                    <input type="text" defaultValue={defaultColor.toString()}
-                            input={(e) => this.color = (e.target as HTMLInputElement).value as keyof INamedColors}></input>
-                </div>
+            <div class={tsplay.sharedStyles.vbox}>
+                <strong>Size</strong>
+                <input type="text" defaultValue={defaultSize.toString()} input={this.onSizeChanged}></input>
+            </div>
+            <div class={tsplay.sharedStyles.vbox}>
+                <strong>Style</strong>
+                {this.stylePicker}
+            </div>
+            <div class={tsplay.sharedStyles.vbox}>
+                <strong>Color</strong>
+                {this.colorPicker}
+                {/* <input type="text" defaultValue={defaultColor.toString()}
+                        input={(e) => this.color = (e.target as HTMLInputElement).value as keyof INamedColors}></input> */}
             </div>
         </div>
     }
@@ -92,16 +95,23 @@ export class BorderPropParams extends mim.Dialog
         </div>
     }
 
-    public setSize( sizeAsString: string): void
+    private onSizeChanged( e: Event): void
     {
+        let sizeAsString = (e.target as HTMLInputElement).value;
         this.size = parseFloat( sizeAsString);
         if (isNaN(this.size))
             this.size = 1;
     }
 
-    private onStyleChanged = ( style: BorderStyle_Keyword): void =>
+    private onStyleChanged = (style: BorderStyle_Keyword): void =>
     {
         this.style = style;
+    }
+
+    private onColorChanged = (color: css.CssColor, mimcssColorString: string): void =>
+    {
+        this.color = color;
+        this.mimcssColorString = mimcssColorString;
     }
 
     private async onOKClicked(): Promise<void>
@@ -115,7 +125,9 @@ export class BorderPropParams extends mim.Dialog
     @mim.computed
     private get result(): string
     {
-        return `${this.propName}: [${this.size}, "${this.style}", "${this.color}"]`;
+        let size = typeof this.size === "string" ? `"${this.size}"` : this.size.toString();
+
+        return `${this.propName}: [${size}, "${this.style}", ${this.mimcssColorString}]`;
     }
 
     // CSS equivalent of the resulting string
@@ -141,7 +153,13 @@ export class BorderPropParams extends mim.Dialog
     @mim.trigger
     private color: css.CssColor;
 
+    // Border color
+    @mim.trigger
+    private mimcssColorString: string;
+
     private stylePicker: OptionPicker;
+
+    private colorPicker: ColorPicker;
 }
 
 
