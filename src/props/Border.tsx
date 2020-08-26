@@ -131,7 +131,7 @@ export class BorderPropParams extends mim.Dialog
     @mim.computed
     private get cssResult(): string
     {
-        return `this.propName: ${css.getStylePropValue( this.propName,
+        return `${this.propName}: ${css.getStylePropValue( this.propName,
             [this.size, this.style, this.color])};`;
     }
 
