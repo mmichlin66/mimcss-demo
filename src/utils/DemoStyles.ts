@@ -26,7 +26,7 @@ export class DemoStyles extends css.StyleDefinition
     })
 
     panel = css.$class({
-        border: "1px solid lightgrey",
+        border: [1, "solid", "lightgrey"],
         placeSelf: "stretch",
         minWidth: 200,
         padding: 8

@@ -2,14 +2,14 @@ import * as mim from "mimbl";
 import * as css from "mimcss"
 import * as tsplay from "mim-tsplay"
 import {demoStyles} from "../utils/DemoStyles"
-import { BorderStyle_StyleType, BorderStyle_Keyword, INamedColors } from "mimcss";
+import { BorderStyle_StyleType, BorderStyle_Single, INamedColors } from "mimcss";
 import { OptionPicker } from "../utils/OptionPicker";
 import { ColorPicker } from "../utils/ColorPicker";
 
 
 
 let defaultSize: css.CssLength = 4;
-let defaultStyle: BorderStyle_Keyword = "solid";
+let defaultStyle: BorderStyle_Single = "solid";
 let defaultColor: css.CssColor = "black";
 
 
@@ -101,7 +101,7 @@ export class BorderPropParams extends mim.Dialog
             this.size = 1;
     }
 
-    private onStyleChanged = (style: BorderStyle_Keyword): void =>
+    private onStyleChanged = (style: BorderStyle_Single): void =>
     {
         this.style = style;
     }
@@ -144,7 +144,7 @@ export class BorderPropParams extends mim.Dialog
 
     // Border style
     @mim.trigger
-    private style: css.BorderStyle_Keyword;
+    private style: css.BorderStyle_Single;
 
     // Border color
     @mim.trigger
