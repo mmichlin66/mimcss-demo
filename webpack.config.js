@@ -15,7 +15,7 @@ function config( isDev)
         },
 
         mode: isDev ? "development" : "production",
-        devtool: isDev ? "#inline-source-map" : undefined,
+        devtool: isDev ? "inline-source-map" : undefined,
         resolve: { extensions: [".js"] },
 
         module:
