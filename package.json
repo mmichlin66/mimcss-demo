@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "mimcss": "^0.8.6",
-    "mimbl": "^0.6.1",
-    "mim-tsplay": "^0.1.5"
+    "mimbl": "^0.6.2",
+    "mim-tsplay": "^0.1.6"
   }
 }
