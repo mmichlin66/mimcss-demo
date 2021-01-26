@@ -1,22 +1,22 @@
 import * as mim from "mimbl";
+import * as comp from "mimcl";
 import * as css from "mimcss"
 import * as tsplay from "mim-tsplay"
 import {demoStyles} from "../utils/DemoStyles"
-import { BorderStyle_StyleType, BorderStyle_Single, INamedColors } from "mimcss";
 import { OptionPicker } from "../utils/OptionPicker";
 import { ColorPicker } from "../utils/ColorPicker";
 
 
 
 let defaultSize: css.CssLength = 4;
-let defaultStyle: BorderStyle_Single = "solid";
+let defaultStyle: css.BorderStyle_Single = "solid";
 let defaultColor: css.CssColor = "black";
 
 
 /**
  * A dialog that allows the user to provide values for the border style property.
  */
-export class BorderPropParams extends mim.Dialog
+export class BorderPropParams extends comp.Dialog
 {
     constructor( propName: "border" | "outline")
     {
@@ -101,7 +101,7 @@ export class BorderPropParams extends mim.Dialog
             this.size = 1;
     }
 
-    private onStyleChanged = (style: BorderStyle_Single): void =>
+    private onStyleChanged = (style: css.BorderStyle_Single): void =>
     {
         this.style = style;
     }

@@ -31,6 +31,7 @@ function config( isDev)
         {
             mimcss: { root: 'mimcss', commonjs2: 'mimcss', commonjs: 'mimcss', amd: 'mimcss' },
             mimbl: { root: 'mimbl', commonjs2: 'mimbl', commonjs: 'mimbl', amd: 'mimbl' },
+            mimcl: { root: 'mimcl', commonjs2: 'mimcl', commonjs: 'mimcl', amd: 'mimcl' },
             "mim-tsplay": { root: 'mim-tsplay', commonjs2: 'mim-tsplay', commonjs: 'mim-tsplay', amd: 'mim-tsplay' },
         }
     }

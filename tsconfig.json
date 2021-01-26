@@ -2,6 +2,7 @@
 	"references": [
 		{ "path": "../mimcss" },
 		{ "path": "../mimbl" },
+		{ "path": "../mimcl" },
 		{ "path": "../mim-tsplay" }
 	],
 	"compilerOptions": {

@@ -1,6 +1,4 @@
-﻿import * as mim from "mimbl";
-import * as css from "mimcss"
-import * as tsplay from "mim-tsplay"
+﻿import * as tsplay from "mim-tsplay"
 import { BorderPropParams } from "./props/Border";
 
 /**
