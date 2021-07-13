@@ -9,7 +9,7 @@ import { ColorPicker } from "../utils/ColorPicker";
 
 
 let defaultSize: css.CssLength = 4;
-let defaultStyle: css.BorderStyle_Single = "solid";
+let defaultStyle: css.BorderStyle = "solid";
 let defaultColor: css.CssColor = "black";
 
 
@@ -101,7 +101,7 @@ export class BorderPropParams extends comp.Dialog
             this.size = 1;
     }
 
-    private onStyleChanged = (style: css.BorderStyle_Single): void =>
+    private onStyleChanged = (style: css.BorderStyle): void =>
     {
         this.style = style;
     }
@@ -140,11 +140,11 @@ export class BorderPropParams extends comp.Dialog
 
     // Border size
     @mim.trigger
-    private size: css.BorderWidth_Single;
+    private size: css.BorderWidth;
 
     // Border style
     @mim.trigger
-    private style: css.BorderStyle_Single;
+    private style: css.BorderStyle;
 
     // Border color
     @mim.trigger
