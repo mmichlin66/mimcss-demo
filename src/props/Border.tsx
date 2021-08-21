@@ -140,7 +140,7 @@ export class BorderPropParams extends comp.Dialog
 
     // Border size
     @mim.trigger
-    private size: css.BorderWidth;
+    private size: css.LineWidth;
 
     // Border style
     @mim.trigger
