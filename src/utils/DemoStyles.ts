@@ -5,12 +5,12 @@ import * as tsplay from "mim-tsplay"
 
 export class DemoStyles extends css.StyleDefinition
 {
-    paramsArea = css.$gridarea();
-    demoArea = css.$gridarea();
-    resultArea = css.$gridarea();
-    cssResultArea = css.$gridarea();
+    paramsArea = this.$gridarea();
+    demoArea = this.$gridarea();
+    resultArea = this.$gridarea();
+    cssResultArea = this.$gridarea();
 
-    masterGrid = css.$class({
+    masterGrid = this.$class({
         // width: "100%",
         // height: "100%",
         overflow: "hidden",
@@ -25,14 +25,14 @@ export class DemoStyles extends css.StyleDefinition
         ]
     })
 
-    panel = css.$class({
+    panel = this.$class({
         border: [1, "solid", "lightgrey"],
         placeSelf: "stretch",
         minWidth: 200,
         padding: 8
     })
 
-    paramsPane = css.$class({
+    paramsPane = this.$class({
         "+": this.panel,
         gridArea: this.paramsArea,
         display: "flex",
@@ -41,7 +41,7 @@ export class DemoStyles extends css.StyleDefinition
         gap: 16
     })
 
-    demoPane = css.$class({
+    demoPane = this.$class({
         "+": this.panel,
         gridArea: this.demoArea,
         display: "flex",
@@ -50,24 +50,24 @@ export class DemoStyles extends css.StyleDefinition
         justifyContent: "space-around",
     })
 
-    resultPane = css.$class({
+    resultPane = this.$class({
         "+": this.panel,
         gridArea: this.resultArea,
     })
 
-    cssResultPane = css.$class({
+    cssResultPane = this.$class({
         "+": this.panel,
         gridArea: this.cssResultArea,
     })
 
-    controlBox = css.$class({
+    controlBox = this.$class({
         display: "flex",
         flexDirection: "column",
         alignItems: "flex-start",
         gap: 4,
     })
 
-    controlRow = css.$class({
+    controlRow = this.$class({
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
