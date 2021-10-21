@@ -65,7 +65,7 @@ export class ColorPicker extends mim.Component
             {
                 this.valueKind = ColorValueKind.Named;
                 this.namedColorPicker.selectedItemID = color;
-                this.buildNamedColor( color as keyof css.INamedColors, alpha, inverted);
+                this.buildNamedColor( color as keyof css.INamedColors, inverted);
             }
             else
             {
@@ -118,8 +118,6 @@ export class ColorPicker extends mim.Component
                 <div class={demoStyles.controlRow} style={{ visibility: namedChecked ? "visible" : "hidden"}}>
                     {this.namedColorPicker}
                     <label for="namedAlphaInput">alpha</label>
-                    <input type="number" id="namedAlphaInput" ref={this.namedAlphaInput} min={0} max={1} step={0.1}
-                        defaultValue="1" input={this.onNamedColorChanged} style={{width: css.em(4)}}/>
                     <label for="namedInvertInput">inverted</label>
                     <input type="checkbox" id="namedInvertInput" ref={this.namedInvertInput} defaultCheck={false} input={this.onNamedColorChanged}/>
                 </div>
@@ -183,7 +181,7 @@ export class ColorPicker extends mim.Component
     private onNamedColorChanged(): void
     {
         this.buildNamedColor( this.namedColorPicker.selectedItemID as keyof css.INamedColors,
-                    parseFloat( this.namedAlphaInput.value), this.namedInvertInput.checked);
+                    this.namedInvertInput.checked);
     }
 
     private onHexColorChanged(): void
@@ -208,32 +206,12 @@ export class ColorPicker extends mim.Component
     }
 
     // Builds CssColor from a name, alpha and invertion flag
-    private buildNamedColor( name: keyof css.INamedColors, alpha: number, inverted: boolean): void
+    private buildNamedColor( name: keyof css.INamedColors, inverted: boolean): void
     {
         let color: css.CssColor = name;
         let mimcssColorString: string;
 
-        if (isNaN(alpha))
-            alpha = 1;
-
-        if (alpha === 0)
-            color = "transparent";
-        else if (alpha < 1)
-        {
-            if (inverted)
-            {
-                let n = css.Colors[name]
-                n = n === 0 ? 0xFFFFFF : n === 0xFFFFFF ? 0 : -n;
-                mimcssColorString = `(-0x${n.toString(16)} - ${alpha})`;
-                color = n >= 0 ? n + alpha : n - alpha;
-            }
-            else
-            {
-                mimcssColorString = `css.alpha( "${name}", ${alpha})`;
-                color = css.alpha( name, alpha);
-            }
-        }
-        else if (inverted)
+        if (inverted)
         {
             let n = css.Colors[name]
             n = n === 0 ? 0xFFFFFF : n === 0xFFFFFF ? 0 : -n;
@@ -296,10 +274,6 @@ export class ColorPicker extends mim.Component
 
     // Picker for system colors
     private systemColorPicker: OptionPicker;
-
-    // Reference to the text box where user enters alpha value for the named color
-    @mim.ref
-    private namedAlphaInput: HTMLInputElement;
 
     // Reference to the check box where user sets whether to invert the named color
     @mim.ref
