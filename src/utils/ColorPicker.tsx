@@ -119,7 +119,7 @@ export class ColorPicker extends mim.Component
                     {this.namedColorPicker}
                     <label for="namedAlphaInput">alpha</label>
                     <label for="namedInvertInput">inverted</label>
-                    <input type="checkbox" id="namedInvertInput" ref={this.namedInvertInput} defaultCheck={false} input={this.onNamedColorChanged}/>
+                    <input type="checkbox" id="namedInvertInput" ref={this.namedInvertInput} defaultChecked={false} input={this.onNamedColorChanged}/>
                 </div>
             </div>
 
@@ -134,7 +134,7 @@ export class ColorPicker extends mim.Component
                     <input type="number" id="hexAlphaInput" ref={this.hexAlphaInput} min={0} max={1} step={0.1}
                         defaultValue="1" input={this.onHexColorChanged} style={{width: css.em(4)}}/>
                     <label for="hexInvertInput">inverted</label>
-                    <input type="checkbox" id="hexInvertInput" ref={this.hexInvertInput} defaultCheck={false} input={this.onHexColorChanged}/>
+                    <input type="checkbox" id="hexInvertInput" ref={this.hexInvertInput} defaultChecked={false} input={this.onHexColorChanged}/>
                 </div>
            </div>
 
