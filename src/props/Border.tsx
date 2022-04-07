@@ -20,7 +20,7 @@ export class BorderPropParams extends comp.Dialog
 {
     constructor( propName: "border" | "outline")
     {
-        super( undefined, `Style property '${propName}'`);
+        super( undefined, {caption: `Style property '${propName}'`});
         this.propName = propName;
 
         this.addButton( { id: "ok", content: "OK", callback: () => this.onOKClicked()})
