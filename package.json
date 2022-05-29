@@ -1,7 +1,7 @@
 {
   "name": "mimcss-demo",
   "private": true,
-  "version": "0.11.14",
+  "version": "0.11.16",
   "description": "Demonstration of Mimcss capabilities",
   "main": "lib/mimcss-demo.js",
   "scripts": {
@@ -25,9 +25,9 @@
     "webpack-cli": "^4.9.1"
   },
   "dependencies": {
-    "mimcss": "^0.11.14",
-    "mimbl": "^0.8.2",
-    "mimcl": "^0.8.2",
-    "mim-tsplay": "^0.1.12"
+    "mimcss": "^0.11.16",
+    "mimbl": "^0.9.2",
+    "mimcl": "^0.9.2",
+    "mim-tsplay": "^0.1.13"
   }
 }
