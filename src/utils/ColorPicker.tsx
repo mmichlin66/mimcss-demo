@@ -1,14 +1,11 @@
 import * as mim from "mimbl";
 import * as css from "mimcss"
-import * as tsplay from "mim-tsplay"
 import {demoStyles} from "../utils/DemoStyles"
 import {OptionPicker} from "./OptionPicker";
-import {sharedStyles} from "mim-tsplay";
-import { INamedColors } from "mimcss";
 
 
 
-const defaultNamedColor: keyof INamedColors = "black";
+const defaultNamedColor: css.NamedColor = "black";
 const defaultHexColor = 0x0;
 
 
@@ -83,7 +80,7 @@ export class ColorPicker extends mim.Component
                 {
                     this.valueKind = ColorValueKind.System;
                     this.systemColorPicker.selectedItemID = color;
-                    this.updateSelectedColor( color as css.SystemColors);
+                    this.updateSelectedColor( color as css.SystemColor);
                 }
             }
         }
@@ -168,7 +165,7 @@ export class ColorPicker extends mim.Component
         else if (this.valueKind === ColorValueKind.Hex)
             this.onHexColorChanged();
         else if (this.valueKind === ColorValueKind.System)
-            this.updateSelectedColor( this.systemColorPicker.selectedItemID as css.SystemColors);
+            this.updateSelectedColor( this.systemColorPicker.selectedItemID as css.SystemColor);
         else if (this.valueKind === ColorValueKind.Transparent)
             this.updateSelectedColor( "transparent");
         else if (this.valueKind === ColorValueKind.Current)
@@ -202,7 +199,7 @@ export class ColorPicker extends mim.Component
         this.onHexColorChanged();
     }
 
-    private onSystemColorSelected = (systemColor: css.SystemColors): void =>
+    private onSystemColorSelected = (systemColor: css.SystemColor): void =>
     {
         this.updateSelectedColor( systemColor);
     }
